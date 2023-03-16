@@ -27,7 +27,7 @@ public class Main {
         StringBuilder passwordBuilder = new StringBuilder();
         System.out.println(ANSI_GREEN + "Digita prima la percentuale delle lettere poi la percentuale dei simboli e il rimarente sarà la percentuale dei numeri.");
         int percentualeLettere = inputIntero(ANSI_GREEN + "Digita percentuale possibilità uscita lettere  (0-100)");
-        int percentualeSimoboli = clamp(inputIntero(ANSI_GREEN + "Digita percentuale possibilità uscita simboli (0-" + (100-percentualeLettere) + ")"),percentualeLettere,100);
+        int percentualeSimoboli = restringiTra(inputIntero(ANSI_GREEN + "Digita percentuale possibilità uscita simboli (0-" + (100-percentualeLettere) + ")"),percentualeLettere,100);
         System.out.println(ANSI_GREEN + "Rimanente possibilità uscita numeri = " + (100-(percentualeLettere+percentualeSimoboli)));
         for (int i = 0; i < lunghezzaPassword; i++)
             carattereCasuale(passwordBuilder, percentualeLettere, percentualeLettere + percentualeSimoboli);
@@ -64,9 +64,9 @@ public class Main {
         return output;
     }
 
-    public static int clamp(int value, int min, int max)
+    public static int restringiTra(int value, int min, int max)
     {
-        return (value < min) ? min : Math.min(value, max);
+        return (value < min) ? min : (value > max) ? max : value ;
     }
 
 }
