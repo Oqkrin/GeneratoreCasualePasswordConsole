@@ -26,7 +26,7 @@ public class Main {
     protected static String generaPassword(int lunghezzaPassword) {
         StringBuilder passwordBuilder = new StringBuilder();
         System.out.println(ANSI_GREEN + "Digita prima la percentuale delle lettere poi la percentuale dei simboli e il rimarente sarà la percentuale dei numeri.");
-        int percentualeLettere = inputIntero(ANSI_GREEN + "Digita percentuale possibilità uscita lettere  (0-100)");
+        int percentualeLettere = restringiTra(inputIntero(ANSI_GREEN + "Digita percentuale possibilità uscita lettere  (0-100)"), 0, 100);
         int percentualeSimoboli = restringiTra(inputIntero(ANSI_GREEN + "Digita percentuale possibilità uscita simboli (0-" + (100-percentualeLettere) + ")"),percentualeLettere,100);
         System.out.println(ANSI_GREEN + "Rimanente possibilità uscita numeri = " + (100-(percentualeLettere+percentualeSimoboli)));
         for (int i = 0; i < lunghezzaPassword; i++)
