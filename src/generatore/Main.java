@@ -1,9 +1,11 @@
 package generatore;
+
+
 import java.security.SecureRandom;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Main {
+public class generaPassword {
 
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\u001B[31m";
@@ -20,21 +22,29 @@ public class Main {
     };
 
     public static void main(String[] args) {
-        System.out.print(generaPassword(inputIntero(ANSI_GREEN + "Digita lunghezza password")));
+    	int nPassword = inputIntero(ANSI_GREEN + "Digita quantità password richieste" + ANSI_RESET);
+        caratteristichePassword(inputIntero(ANSI_GREEN + "Digita lunghezza password"), nPassword);
     }
 
-    protected static String generaPassword(int lunghezzaPassword) {
-        StringBuilder passwordBuilder = new StringBuilder();
+    private static void caratteristichePassword(int lunghezzaPassword, int nPassword) {
         System.out.println(ANSI_GREEN + "Digita prima la percentuale delle lettere poi la percentuale dei simboli e il rimarente sarà la percentuale dei numeri.");
         int percentualeLettere = restringiTra(inputIntero(ANSI_GREEN + "Digita percentuale possibilità uscita lettere  (0-100)"), 0, 100);
         int percentualeSimoboli = restringiTra(inputIntero(ANSI_GREEN + "Digita percentuale possibilità uscita simboli (0-" + (100-percentualeLettere) + ")"),percentualeLettere,100);
         System.out.println(ANSI_GREEN + "Rimanente possibilità uscita numeri = " + (100-(percentualeLettere+percentualeSimoboli)));
+        System.out.println(ANSI_YELLOW + "Password : ");
+        for (int i = 0; i < nPassword; i++) {
+            generaPassword(percentualeLettere, percentualeSimoboli, lunghezzaPassword);
+        }
+    }
+    
+    private static void generaPassword(int percentualeLettere, int percentualeSimoboli, int lunghezzaPassword) {
+        StringBuilder passwordBuilder = new StringBuilder();
         for (int i = 0; i < lunghezzaPassword; i++)
             carattereCasuale(passwordBuilder, percentualeLettere, percentualeLettere + percentualeSimoboli);
 
-        return ANSI_YELLOW + "Password : " + ANSI_PURPLE + passwordBuilder + ANSI_RESET;
+        System.out.println(ANSI_PURPLE + passwordBuilder + ANSI_RESET);
     }
-
+    
     private static void carattereCasuale(StringBuilder passwordBuilder, int percentualeLettere, int percentualeSimboli) {
         int percentuale = new SecureRandom().nextInt(101);
 
@@ -43,7 +53,7 @@ public class Main {
         else if (percentuale < percentualeSimboli + 1)
             passwordBuilder.append(simboli[new SecureRandom().nextInt(simboli.length)]);
         else
-            passwordBuilder.append(new SecureRandom().nextInt(0, 10));
+            passwordBuilder.append(new SecureRandom().nextInt(10));
 
     }
 
@@ -60,7 +70,7 @@ public class Main {
         } catch (InputMismatchException e) {
             output = inputIntero(ANSI_RED + "Tipo input errato riprovare" );
         }
-
+        input.close();
         return output;
     }
 
