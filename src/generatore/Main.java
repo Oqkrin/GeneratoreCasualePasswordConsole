@@ -11,12 +11,22 @@ public class Main {
 
 
     public static void main(String[] args) {
-
+        int percentualeLettere;
+        int percentualeSimboli;
         int nPassword = inputInt("\nDigita quantità password richieste");
 
-        int percentualeLettere = restringiTra(inputInt("\nDigita, in percentuale, la possibilità  di uscita di lettere  (0-100)"), 0, 100);
-        int percentualeSimboli = restringiTra(inputInt("Digita, in percentuale, la possibilità di uscita di simboli (0-" + (100-percentualeLettere) + ")"),0,100-percentualeLettere);
-        System.out.println("Rimanente possibilità uscita numeri = " + (100-(percentualeLettere+percentualeSimboli)));
+        if(inputInt("\nDigita 0 per percentuali di uscita lettere, simboli e numeri casuali") != 0) {
+            percentualeLettere = restringiTra(inputInt("\nDigita, in percentuale, la possibilità  di uscita di lettere  (0-100)"), 0, 100);
+            percentualeSimboli = restringiTra(inputInt("Digita, in percentuale, la possibilità di uscita di simboli (0-" + (100 - percentualeLettere) + ")"), 0, 100 - percentualeLettere);
+        } else {
+            percentualeLettere = new SecureRandom().nextInt(100 +1);
+            System.out.println("\nPossibilità uscita lettere = " + percentualeLettere + "%");
+
+            percentualeSimboli = new SecureRandom().nextInt(100-percentualeLettere +1);
+            System.out.println("Possibilità uscita simboli = " + percentualeSimboli + "%");
+        }
+
+        System.out.println("Rimanente possibilità uscita numeri = " + (100-(percentualeLettere+percentualeSimboli) + "%"));
 
         int lunghezzaPassword = inputInt("\nDigita lunghezza passwords");
 
@@ -26,28 +36,29 @@ public class Main {
         for (int i = 0; i < nPassword; i++) {
             passwords[i] = generaPassword(percentualeLettere, percentualeSimboli, lunghezzaPassword);
         }
-        for(String output : controlloDuplicati(passwords, percentualeLettere, percentualeSimboli))
+        for(String output : controlloDuplicati(passwords, percentualeLettere, percentualeSimboli, lunghezzaPassword))
             System.out.println(output);
 
         if(inputInt("\nDigita 0 per interrompere") != 0)
             main(null);
     }
 
-    private static ArrayList<String> controlloDuplicati(String[] arrayDaControllare, int percentualeLettere, int percentualeSimboli) {
-
-        ArrayList<String> passwordsDistinte = new ArrayList<>(Arrays.stream(arrayDaControllare).distinct().toList());
+    private static ArrayList<String> controlloDuplicati(String[] arrayDaControllare, int percentualeLettere, int percentualeSimboli, int lunghezzaPassword) {
+        ArrayList<String> passwordsDistinte = new ArrayList<>(Arrays.stream(arrayDaControllare).sorted().distinct().toList());
 
         if (arrayDaControllare.length != passwordsDistinte.size()) {
+
             for (int i = 0; i < arrayDaControllare.length - passwordsDistinte.size(); i++) {
-                passwordsDistinte.add(generaPassword(percentualeLettere, percentualeSimboli, arrayDaControllare.length));
+                passwordsDistinte.add(generaPassword(percentualeLettere, percentualeSimboli, lunghezzaPassword));
             }
-            controlloDuplicati(passwordsDistinte.toArray(new String[0]), percentualeLettere, percentualeSimboli);
+            controlloDuplicati(passwordsDistinte.toArray(new String[0]), percentualeLettere, percentualeSimboli, lunghezzaPassword);
         }
         return passwordsDistinte;
     }
 
     private static String generaPassword(int percentualeLettere, int percentualeSimboli, int lunghezzaPassword) {
         StringBuilder passwordBuilder = new StringBuilder();
+
         for (int i = 0; i < lunghezzaPassword; i++)
             carattereCasuale(passwordBuilder, percentualeLettere, percentualeLettere + percentualeSimboli);
 
